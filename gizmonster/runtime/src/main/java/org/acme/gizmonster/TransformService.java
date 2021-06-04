@@ -1,7 +1,7 @@
 package org.acme.gizmonster;
 
 /**
- * A generated implementation of this interface will be registered as a CDI bean.
+ * A generated implementation of this interface will be registered as a CDI bean so that users can inject it.
  */
 public interface TransformService {
 

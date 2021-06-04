@@ -43,6 +43,7 @@ class GizmonsterProcessor {
             BuildProducer<GeneratedBeanBuildItem> generatedBeanClasses,
             CombinedIndexBuildItem index) {
 
+        // Create a ClassOutput instance
         GeneratedBeanGizmoAdaptor gizmoAdaptor = new GeneratedBeanGizmoAdaptor(
                 generatedBeanClasses);
 
@@ -51,7 +52,7 @@ class GizmonsterProcessor {
                 .getAllKnownImplementors(
                         DotName.createSimple(Transformer.class.getName()))
                 .stream()
-                .map(ClassInfo::name).map(DotName::toString)
+                .map(ClassInfo::toString)
                 .collect(Collectors.toSet());
 
         // Generate the org.acme.gizmonster.TransformerServiceImpl class
@@ -120,7 +121,6 @@ class GizmonsterProcessor {
             AssignableResultHandle result = transformMethod
                     .createVariable(String.class);
             transformMethod.assign(result, param);
-
             ResultHandle transformers = transformMethod.readInstanceField(
                     transformersField.getFieldDescriptor(),
                     transformMethod.getThis());
