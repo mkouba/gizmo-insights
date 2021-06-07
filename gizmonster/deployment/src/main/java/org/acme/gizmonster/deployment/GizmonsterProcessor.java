@@ -106,16 +106,16 @@ class GizmonsterProcessor {
                     .getMethodCreator("transform", String.class, String.class);
             ResultHandle param = transformMethod.getMethodParam(0);
 
-            // if(value == null || value.isEmpty()) return "OK";
+            // Test null and blank value
             BranchResult testIsNull = transformMethod.ifNull(param);
             BytecodeCreator isNull = testIsNull.trueBranch();
-            isNull.returnValue(isNull.load("OK"));
-            BytecodeCreator isNotNull = testIsNull.falseBranch();
-            BranchResult testIsEmpty = isNotNull.ifTrue(isNotNull
+            isNull.returnValue(isNull.load("Null not allowed!"));
+
+            BranchResult testIsBlank = transformMethod.ifTrue(transformMethod
                     .invokeVirtualMethod(MethodDescriptor.ofMethod(String.class,
-                            "isEmpty", boolean.class), param));
-            BytecodeCreator isEmpty = testIsEmpty.trueBranch();
-            isEmpty.returnValue(isEmpty.load("OK"));
+                            "isBlank", boolean.class), param));
+            BytecodeCreator isBlank = testIsBlank.trueBranch();
+            isBlank.returnValue(isBlank.load("Empty string not allowed!"));
 
             // Now let's apply all transformers
             AssignableResultHandle result = transformMethod
