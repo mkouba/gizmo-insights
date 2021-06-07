@@ -55,7 +55,7 @@ class GizmonsterProcessor {
                 .map(ClassInfo::toString)
                 .collect(Collectors.toSet());
 
-        // Generate the org.acme.gizmonster.TransformerServiceImpl class
+        // Generate the TransformerService implementation class
         // use the try-with-resources to call ClassCreator.close() automatically
         try (ClassCreator classCreator = ClassCreator.builder()
                 .className("org.acme.gizmonster.GeneratedTransformService")
