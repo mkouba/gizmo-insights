@@ -89,8 +89,7 @@ class GizmonsterProcessor {
                         MethodDescriptor.ofConstructor(transformerClass));
                 // list.add(transformerInstance)
                 constructor.invokeInterfaceMethod(
-                        MethodDescriptor.ofMethod(List.class, "add",
-                                boolean.class, Object.class),
+                        LIST_ADD,
                         list, transformerInstance);
             }
             // this.transformers = list
@@ -112,8 +111,7 @@ class GizmonsterProcessor {
             isNull.returnValue(isNull.load("Null not allowed!"));
 
             BranchResult testIsBlank = transformMethod.ifTrue(transformMethod
-                    .invokeVirtualMethod(MethodDescriptor.ofMethod(String.class,
-                            "isBlank", boolean.class), param));
+                    .invokeVirtualMethod(STRING_IS_BLANK, param));
             BytecodeCreator isBlank = testIsBlank.trueBranch();
             isBlank.returnValue(isBlank.load("Empty string not allowed!"));
 
@@ -125,24 +123,38 @@ class GizmonsterProcessor {
                     transformersField.getFieldDescriptor(),
                     transformMethod.getThis());
             ResultHandle iterator = transformMethod
-                    .invokeInterfaceMethod(MethodDescriptor.ofMethod(List.class,
-                            "iterator", Iterator.class), transformers);
+                    .invokeInterfaceMethod(LIST_ITERATOR, transformers);
             // while(iterator.hasNext())
             WhileLoop loop = transformMethod.whileLoop(bc -> bc.ifTrue(
-                    bc.invokeInterfaceMethod(MethodDescriptor
-                            .ofMethod(Iterator.class, "hasNext", boolean.class),
+                    bc.invokeInterfaceMethod(ITERATOR_HAS_NEXT,
                             iterator)));
             BytecodeCreator block = loop.block();
             // Transformer transformer = iterator.next()
             ResultHandle transformer = block
-                    .invokeInterfaceMethod(MethodDescriptor.ofMethod(
-                            Iterator.class, "next", Object.class), iterator);
+                    .invokeInterfaceMethod(ITERATOR_NEXT, iterator);
             // result = transformer.apply(result)
             block.assign(result, block.invokeInterfaceMethod(
-                    MethodDescriptor.ofMethod(Transformer.class, "apply",
-                            String.class, String.class),
+                    TRANSFORMER_APPLY,
                     transformer, result));
             transformMethod.returnValue(result);
         }
     }
+
+    private static final MethodDescriptor TRANSFORMER_APPLY = MethodDescriptor
+            .ofMethod(Transformer.class, "apply",
+                    String.class, String.class);
+    private static final MethodDescriptor ITERATOR_NEXT = MethodDescriptor
+            .ofMethod(
+                    Iterator.class, "next", Object.class);
+    private static final MethodDescriptor ITERATOR_HAS_NEXT = MethodDescriptor
+            .ofMethod(Iterator.class, "hasNext", boolean.class);
+    private static final MethodDescriptor LIST_ITERATOR = MethodDescriptor
+            .ofMethod(List.class,
+                    "iterator", Iterator.class);
+    private static final MethodDescriptor STRING_IS_BLANK = MethodDescriptor
+            .ofMethod(String.class,
+                    "isBlank", boolean.class);
+    private static final MethodDescriptor LIST_ADD = MethodDescriptor.ofMethod(
+            List.class, "add",
+            boolean.class, Object.class);
 }
