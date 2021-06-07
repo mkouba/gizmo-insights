@@ -58,7 +58,7 @@ class GizmonsterProcessor {
         // Generate the org.acme.gizmonster.TransformerServiceImpl class
         // use the try-with-resources to call ClassCreator.close() automatically
         try (ClassCreator classCreator = ClassCreator.builder()
-                .className("org.acme.gizmonster.TransformerServiceImpl")
+                .className("org.acme.gizmonster.GeneratedTransformService")
                 .interfaces(TransformService.class)
                 .classOutput(gizmoAdaptor)
                 .build()) {
